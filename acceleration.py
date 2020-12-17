@@ -55,7 +55,6 @@ if __name__ == "__main__":
                           "time_unit":"ps",
                           "new_time_unit": "ps"}
     
-    #inp = SimpleNamespace(**default_parameters)
     
     config_parser = argparse.ArgumentParser(add_help=False)
     config_parser.add_argument('-json_file')
