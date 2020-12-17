@@ -1,0 +1,12 @@
+{
+    "data_file": "times_A_unbiased.dat",
+    "statistics_file": "statistics_A_to_B_unbiased.dat",
+    "out_file": "out.dat",
+    "ECDF_plot": "ECDF_A_to_B_unbiased.png",
+    "CDF_plot": "CDF_A_to_B_unbiased.png",
+    "wd": "./",
+    "time_unit": "ps",
+    "new_time_unit": "ns",
+    "range_factor": 100,
+    "nbins": 10000
+}
