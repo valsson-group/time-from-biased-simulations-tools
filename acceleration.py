@@ -62,7 +62,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(parents=[config_parser], conflict_handler='resolve')
     parser.add_argument('-input_colvarfile', help='Colvar file name')
     parser.add_argument('-output_colvarfile', help='Output colvar file name')
-    parser.add_argument('-wd', help='Working directory')
+    parser.add_argument('-wd', help='Working directory', nargs='*')
     parser.add_argument('-time_column', help='Name of the time column')
     parser.add_argument('-bias_column', help='Name of the bias column')
     parser.add_argument('-variables', help='Variables we need to distinguish between states')
@@ -82,13 +82,15 @@ if __name__ == "__main__":
     inp = SimpleNamespace(**default_parameters)
     
     time_units_dict = {'ps':10e-12, 'ns': 10e-9, 'us': 10e-6, 'ms': 10e-3, 's': 1 }
-
-    os.chdir(inp.wd)
-    colvar_data = read_colvar(inp.input_colvarfile, *inp.variables, inp.time_column, inp.bias_column)
-    calc_acceleration(colvar_data,biasname=inp.bias_column, kT=inp.kT,timestep=inp.timestep, time_unit=time_units_dict[inp.time_unit], new_time_unit=time_units_dict[inp.new_time_unit])
-    columns_to_write = [inp.time_column, *inp.variables, inp.bias_column]
-    for key in colvar_data:
-        if key not in columns_to_write:
-            columns_to_write.append(key)
-    
-    write_colvar(inp.output_colvarfile, colvar_data, *columns_to_write)
+    for wd in inp.wd:
+        old_dir = os.getcwd()
+        os.chdir(wd)
+        colvar_data = read_colvar(inp.input_colvarfile, *inp.variables, inp.time_column, inp.bias_column)
+        calc_acceleration(colvar_data,biasname=inp.bias_column, kT=inp.kT,timestep=inp.timestep, time_unit=time_units_dict[inp.time_unit], new_time_unit=time_units_dict[inp.new_time_unit])
+        columns_to_write = [inp.time_column, *inp.variables, inp.bias_column]
+        for key in colvar_data:
+            if key not in columns_to_write:
+                columns_to_write.append(key)
+        
+        write_colvar(inp.output_colvarfile, colvar_data, *columns_to_write)
+        os.chdir(old_dir)
