@@ -42,55 +42,50 @@ if __name__ == "__main__":
     import argparse
     import json
     import os
-    from types import SimpleNamespace
-    
-    default_parameters = {'input_colvarfile': 'COLVAR', 
-                          'output_colvarfile': 'COLVAR_acceleration', 
-                          'wd': './', 
-                          "time_column": "time",
-                          "bias_column": "mtd.bias",
-                          "variables": ["var"],
-                          "kT": 2.494339,
-                          "timestep": 1,
-                          "time_unit":"ps",
-                          "new_time_unit": "ps"}
-    
     
     config_parser = argparse.ArgumentParser(add_help=False)
     config_parser.add_argument('-json_file')
      
     parser = argparse.ArgumentParser(parents=[config_parser], conflict_handler='resolve')
-    parser.add_argument('-input_colvarfile', help='Colvar file name')
-    parser.add_argument('-output_colvarfile', help='Output colvar file name')
-    parser.add_argument('-wd', help='Working directory', nargs='*')
-    parser.add_argument('-time_column', help='Name of the time column')
-    parser.add_argument('-bias_column', help='Name of the bias column')
-    parser.add_argument('-variables', help='Variables we need to distinguish between states')
-    parser.add_argument('-kT', type=float)
-    parser.add_argument('-timestep', help='Timestep used in the colvar file')
-    parser.add_argument('-time_unit', help='Time units used in the colvar file')
-    parser.add_argument('-new_time_unit', help='Time units for rescaled time')
+    parser.add_argument('-input_colvarfile',default='COLVAR', help='Colvar file name')
+    parser.add_argument('-output_colvarfile',default='COLVAR_acceleration', help='Output colvar file name')
+    parser.add_argument('-wd',default=['./'], help='Working directory', nargs='*')
+    parser.add_argument('-time_column',default='time', help='Name of the time column')
+    parser.add_argument('-bias_column',default='mtd.bias', help='Name of the bias column')
+    parser.add_argument('-variables',default=['var'], help='Variables we need to distinguish between states', nargs='*')
+    parser.add_argument('-kT',default=2.494339, type=float)
+    parser.add_argument('-timestep',default=0.1, help='Timestep used in the colvar file')
+    parser.add_argument('-time_unit',default="ps", help='Time units used in the colvar file')
+    parser.add_argument('-new_time_unit',default= "ns", help='Time units for rescaled time')
+    parser.add_argument('--write_json',action='store_true', help='Write json file and exit')
     
-    
+
     args, left_argv = config_parser.parse_known_args()
+    
     if args.json_file is not None:
         json_dict = json.load(open(args.json_file))
         vars(args).update(json_dict)
     
     parser.parse_args(left_argv, args)
-    default_parameters.update(vars(args))
-    inp = SimpleNamespace(**default_parameters)
-    
-    time_units_dict = {'ps':10e-12, 'ns': 10e-9, 'us': 10e-6, 'ms': 10e-3, 's': 1 }
-    for wd in inp.wd:
-        old_dir = os.getcwd()
-        os.chdir(wd)
-        colvar_data = read_colvar(inp.input_colvarfile, *inp.variables, inp.time_column, inp.bias_column)
-        calc_acceleration(colvar_data,biasname=inp.bias_column, kT=inp.kT,timestep=inp.timestep, time_unit=time_units_dict[inp.time_unit], new_time_unit=time_units_dict[inp.new_time_unit])
-        columns_to_write = [inp.time_column, *inp.variables, inp.bias_column]
-        for key in colvar_data:
-            if key not in columns_to_write:
-                columns_to_write.append(key)
-        
-        write_colvar(inp.output_colvarfile, colvar_data, *columns_to_write)
-        os.chdir(old_dir)
+
+    if args.write_json:
+        with open('template.json', 'w') as fp:
+            template_input = vars(args)
+            template_input.pop('write_json', None)
+            template_input.pop('json_file', None)
+            json.dump(template_input,fp, indent=2)
+    else:
+        time_units_dict = {'ps':10e-12, 'ns': 10e-9, 'us': 10e-6, 'ms': 10e-3, 's': 1 }
+        for wd in args.wd:
+            print("Processing {}".format(os.path.join(wd, args.input_colvarfile)))
+            old_dir = os.getcwd()
+            os.chdir(wd)
+            colvar_data = read_colvar(args.input_colvarfile, *args.variables, args.time_column, args.bias_column)
+            calc_acceleration(colvar_data,biasname=args.bias_column, kT=args.kT,timestep=args.timestep, time_unit=time_units_dict[args.time_unit], new_time_unit=time_units_dict[args.new_time_unit])
+            columns_to_write = [args.time_column, *args.variables, args.bias_column]
+            for key in colvar_data:
+                if key not in columns_to_write:
+                    columns_to_write.append(key)
+            
+            write_colvar(args.output_colvarfile, colvar_data, *columns_to_write)
+            os.chdir(old_dir)
