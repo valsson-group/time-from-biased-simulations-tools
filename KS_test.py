@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from scipy.stats import expon
 import numpy as np
 from matplotlib.figure import Figure
