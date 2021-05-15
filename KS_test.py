@@ -159,3 +159,5 @@ if __name__ == "__main__":
             out.write("log2mu_median_ratio: {:.5f}; should be 1\n".format(mu*np.log(2)/t_m))
             out.write("tau_mu_ratio: {:.5f}; should be 1, because mu approximates tau\n".format(tau/mu))
             out.write("pvalue_KS_statistic: {:.5f}\n".format(p_value))
+            out.write("D_KS_statistic: {:.5f}\n".format(D))
+            
