@@ -22,10 +22,10 @@ def write_header(*column_names):
     header = "#! FIELDS "+temp_string
     return header
 
-def write_colvar(filename, colvar_data, *column_names):
+def write_colvar(filename, colvar_data, *column_names, output_fmt="%15.9f"):
     header = write_header(*column_names)
     colvar_data_ordered = [colvar_data[var] for var in column_names]
-    np.savetxt(filename,  np.column_stack(colvar_data_ordered), fmt='%8.6f', header=header,comments='')
+    np.savetxt(filename,  np.column_stack(colvar_data_ordered), fmt=output_fmt, header=header,comments='')
 
 def calc_acceleration(colvar_data, biasname,kT,timestep, time_unit, new_time_unit ):
     beta = 1/kT
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     parser.add_argument('-timestep',default=0.1, help='Timestep used in the colvar file')
     parser.add_argument('-time_unit',default="ps", help='Time units used in the colvar file')
     parser.add_argument('-new_time_unit',default= "ns", help='Time units for rescaled time')
+    parser.add_argument('-output_format',default= "%15.9f", help='Format of the output colvar file')
     parser.add_argument('--write_json',action='store_true', help='Write json file and exit')
     
 
@@ -87,5 +88,5 @@ if __name__ == "__main__":
                 if key not in columns_to_write:
                     columns_to_write.append(key)
             
-            write_colvar(args.output_colvarfile, colvar_data, *columns_to_write)
+            write_colvar(args.output_colvarfile, colvar_data, *columns_to_write, output_fmt=args.output_format)
             os.chdir(old_dir)
