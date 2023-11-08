@@ -27,11 +27,20 @@ def write_colvar(filename, colvar_data, *column_names, output_fmt="%15.9f"):
     colvar_data_ordered = [colvar_data[var] for var in column_names]
     np.savetxt(filename,  np.column_stack(colvar_data_ordered), fmt=output_fmt, header=header,comments='')
 
-def calc_acceleration(colvar_data, biasname,kT,timestep, time_unit, new_time_unit ):
+def calc_acceleration(colvar_data, timename, biasname, kT, timestep, time_unit, new_time_unit):
     beta = 1/kT
     bias = colvar_data[biasname]
-    rescaled_time = np.cumsum(np.exp(beta*bias)*timestep*time_unit/new_time_unit)
-    acceleration = np.divide (np.cumsum(np.exp(beta*bias)),np.arange(1,len(bias)+1))
+    time = colvar_data[timename]
+    if(time[0]==0.0):
+        rescaled_time=np.zeros(len(time))
+        rescaled_time[0]=time[0]
+        rescaled_time[1:] = np.cumsum(np.exp(beta*bias[1:])*timestep*time_unit/new_time_unit)
+        acceleration=np.zeros(len(time))
+        acceleration[0]=np.exp(beta*bias[0])
+        acceleration[1:] = np.divide (np.cumsum(np.exp(beta*bias[1:])),np.arange(1,len(bias[1:])+1))
+    else:
+        rescaled_time = np.cumsum(np.exp(beta*bias)*timestep*time_unit/new_time_unit)
+        acceleration = np.divide (np.cumsum(np.exp(beta*bias)),np.arange(1,len(bias)+1))
     colvar_data["rescaled_time"] = rescaled_time
     colvar_data["acceleration"] = acceleration
 
@@ -82,7 +91,7 @@ if __name__ == "__main__":
             old_dir = os.getcwd()
             os.chdir(wd)
             colvar_data = read_colvar(args.input_colvarfile, *args.variables, args.time_column, args.bias_column)
-            calc_acceleration(colvar_data,biasname=args.bias_column, kT=args.kT,timestep=args.timestep, time_unit=time_units_dict[args.time_unit], new_time_unit=time_units_dict[args.new_time_unit])
+            calc_acceleration(colvar_data, timename=args.time_column, biasname=args.bias_column, kT=args.kT,timestep=args.timestep, time_unit=time_units_dict[args.time_unit], new_time_unit=time_units_dict[args.new_time_unit])
             columns_to_write = [args.time_column, *args.variables, args.bias_column]
             for key in colvar_data:
                 if key not in columns_to_write:
