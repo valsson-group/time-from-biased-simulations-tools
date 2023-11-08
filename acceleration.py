@@ -57,7 +57,7 @@ if __name__ == "__main__":
     parser.add_argument('-timestep',default=0.1, help='Timestep used in the colvar file')
     parser.add_argument('-time_unit',default="ps", help='Time units used in the colvar file')
     parser.add_argument('-new_time_unit',default= "ns", help='Time units for rescaled time')
-    parser.add_argument('-output_format',default= "%15.9f", help='Format of the output colvar file')
+    parser.add_argument('-output_format',default= "%15.9f", help='Format of the output colvar file. Default is %15.9f')
     parser.add_argument('--write_json',action='store_true', help='Write json file and exit')
     
 
