@@ -9,4 +9,4 @@ Tools for obtaining time from biased molecular dynamics simulations.
 
 ### Authors
 - Olga Rogacheva, Saint Petersburg State University, Russia
-- Omar Valsson, Max Planck Institute for Polymer Research, Mainz, Germany
+- Omar Valsson, University of North Texas
