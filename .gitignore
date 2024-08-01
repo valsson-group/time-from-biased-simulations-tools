@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+Examples/KS_test-example/CDF_A_to_B_unbiased.png
+Examples/KS_test-example/PDF_A_to_B_unbiased.png
+Examples/KS_test-example/out.dat
+Examples/KS_test-example/statistics_A_to_B_unbiased.dat
+Examples/acceleration-examples/COLVAR_acceleration
+
