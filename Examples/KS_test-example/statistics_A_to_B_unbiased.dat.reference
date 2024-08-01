@@ -1,0 +1,10 @@
+mu: 1845.07144
+mu_sem: 183.11949
+sigma: 1831.19488
+t_m: 1272.74200
+tau: 1830.04981
+mu_sigma_ratio: 1.00758; should be 1
+log2mu_median_ratio: 1.00484; should be 1
+tau_mu_ratio: 0.99186; should be 1, because mu approximates tau
+pvalue_KS_statistic: 0.93904
+D_KS_statistic: 0.05173

@@ -1,7 +1,6 @@
 {
     "input_colvarfile": "COLVAR",
     "output_colvarfile": "COLVAR_acceleration",
-    "wd": "./",
     "time_column": "time",
     "bias_column": "mtd.bias",
     "variables": ["phi"],
