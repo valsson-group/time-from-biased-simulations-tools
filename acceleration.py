@@ -85,7 +85,7 @@ if __name__ == "__main__":
             template_input.pop('json_file', None)
             json.dump(template_input,fp, indent=2)
     else:
-        time_units_dict = {'ps':10e-12, 'ns': 10e-9, 'us': 10e-6, 'ms': 10e-3, 's': 1 }
+        time_units_dict = {'ps':1e-12, 'ns': 1e-9, 'us': 1e-6, 'ms': 1e-3, 's': 1 }
         for wd in args.wd:
             print("Processing {}".format(os.path.join(wd, args.input_colvarfile)))
             old_dir = os.getcwd()
