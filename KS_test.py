@@ -19,18 +19,21 @@ def plot_cdf(outname, time_bins, ecdf, fitted_curve, theoretical_curve, p_value,
     gs = mpl.gridspec.GridSpec(nrows=1, ncols=1, left =0.17, right=0.97, bottom=0.13, top=0.90,  wspace=0.2, hspace=0.2)
     ax1 = fig.add_subplot(gs[0,0])
     ax1.set_xscale('log')
-    ax1.plot(time_bins, theoretical_curve, color='#e49b0f', linewidth=3, alpha=0.25)
-    ax1.plot(time_bins, fitted_curve, color='#008000', linewidth=1.5, alpha = 0.35)
-    ax1.plot(time_bins, ecdf, color='#c4201c', linewidth=0.7)
+    ax1.plot(time_bins, theoretical_curve, color='#e49b0f', linewidth=3, alpha=0.25, label="_Theoretical CDF")
+    ax1.plot(time_bins, fitted_curve, color='#008000', linewidth=1.5, alpha = 0.35, label="Theoretical CDF")
+    ax1.plot(time_bins, ecdf, color='#c4201c', linewidth=0.7, label="Emperical CDF")
+    ax1.legend(loc="lower right")
 
-    ax1.set_xlabel('Time, {}'.format(time_units), fontsize=8)
-    ax1.set_ylabel('ECDF', fontsize=8)
-    ax1.text(1/rate/10000, 0.8, 'p-value = {:.2f}'.format(p_value), fontsize=10)
-    ax1.text(1/rate/10000, 0.7, 'tau = {:.2f} {}'.format(1/rate, time_units), fontsize=10)
+    ax1.set_xlabel('Time [{}]'.format(time_units), fontsize=8)
+    ax1.set_ylabel('Cumulative Distribution Function', fontsize=8)
+    # ax1.text(1/rate/10000, 0.8, 'p-value = {:.2f}'.format(p_value), fontsize=10)
+    # ax1.text(1/rate/10000, 0.7, 'tau = {:.2f} {}'.format(1/rate, time_units), fontsize=10)
+    ax1.text(0.1, 0.8, 'tau = {:.2f} {}'.format(1/rate, time_units), fontsize=10, transform=ax1.transAxes)
+    ax1.text(0.1, 0.7, 'p-value = {:.2f}'.format(p_value), fontsize=10, transform=ax1.transAxes)
     for tick in ax1.xaxis.get_major_ticks():
-        tick.label.set_fontsize(8)
+        tick.label1.set_fontsize(8)
     for tick in ax1.yaxis.get_major_ticks():
-        tick.label.set_fontsize(8)
+        tick.label1.set_fontsize(8)
 
     fig.savefig(os.path.normpath('{}'.format(outname)))
 
@@ -55,9 +58,9 @@ def plot_pdf(outname, times, rate, time_units):
     ax1.set_ylabel('$f_{{T1}}$(t) [1/{}]'.format(time_units), fontsize=8)
 
     for tick in ax1.xaxis.get_major_ticks():
-        tick.label.set_fontsize(8)
+        tick.label1.set_fontsize(8)
     for tick in ax1.yaxis.get_major_ticks():
-        tick.label.set_fontsize(8)
+        tick.label1.set_fontsize(8)
 
     fig.savefig(os.path.normpath('{}'.format(outname)))
 
@@ -104,7 +107,7 @@ if __name__ == "__main__":
             json.dump(template_input,fp, indent=2)
     else:
 
-        time_units_dict = {'ps':1e-12, 'ns': 1e-9, 'us': 1e-6, 'ms': 1e-3, 's': 1 }
+        time_units_dict = {'ps':1e-12, 'ns': 1e-9, 'us': 1e-6, 'ms': 1e-3, 's': 1 , 'h': 3600 }
 
         os.chdir(args.wd)
 
