@@ -107,7 +107,12 @@ if __name__ == "__main__":
             json.dump(template_input,fp, indent=2)
     else:
 
-        time_units_dict = {'ps':1e-12, 'ns': 1e-9, 'us': 1e-6, 'ms': 1e-3, 's': 1 , 'h': 3600 }
+        time_units_dict = {'ps':1e-12 , 
+                           'ns': 1e-9 , 
+                           'us': 1e-6 , 
+                           'ms': 1e-3 , 
+                           's': 1 , 
+                           'h': 3600}
 
         os.chdir(args.wd)
 
