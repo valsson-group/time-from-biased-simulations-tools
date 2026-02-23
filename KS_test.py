@@ -85,6 +85,7 @@ if __name__ == "__main__":
     parser.add_argument('-out_file',default='out.dat', help='Output file for    ')
     parser.add_argument('-CDF_plot',default='CDF.png', help='CDF pot')
     parser.add_argument('-PDF_plot',default='PDF.png', help='PDF plot')
+    parser.add_argument('-make_PDF_plot',default='true', help='If to create the PDF plot')
     parser.add_argument('-range_factor',default=100, help='range factor for histogram')
     parser.add_argument('-time_unit',default= "ns", help='Time units used in the input file')
     parser.add_argument('-new_time_unit',default= "ns", help='Time units of tau')
@@ -155,7 +156,7 @@ if __name__ == "__main__":
 
         #Plot the results
         plot_cdf(outname=args.CDF_plot, time_bins=time_bins, ecdf=ecdf, fitted_curve=fitted_curve, theoretical_curve=theoretical_curve,  p_value=p_value, rate=rate, time_units=args.new_time_unit)
-        plot_pdf(outname=args.PDF_plot, times=data, rate=rate, time_units=args.new_time_unit)
+        if args.make_PDF_plot: plot_pdf(outname=args.PDF_plot, times=data, rate=rate, time_units=args.new_time_unit)
 
         #Save statistics
 
