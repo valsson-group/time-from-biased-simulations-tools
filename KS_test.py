@@ -7,6 +7,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib as mpl
 import math
 import os
+import sys
 
 
 def plot_cdf(outname, time_bins, ecdf, fitted_curve, theoretical_curve, p_value, rate, time_units):
@@ -49,7 +50,13 @@ def plot_pdf(outname, times, rate, time_units):
     gs = mpl.gridspec.GridSpec(nrows=1, ncols=1, left =0.17, right=0.97, bottom=0.13, top=0.90,  wspace=0.2, hspace=0.2)
     ax1 = fig.add_subplot(gs[0,0])
     y, x = np.histogram(times, bins=int((len(times))**0.5))
-    y = y/np.trapz(y, x=x[:-1])
+    if np.__version__[:1] == '1':
+        y = y/np.trapz(y, x=x[:-1])
+    elif np.__version__[:1] == '2':
+        y = y/np.trapezoid(y, x=x[:-1])
+    else:
+        print("Some issues with numpy version, np.__versio__={:s}".format(np.__version__))
+        sys.exit()
     ax1.scatter(x[:-1], y, s=30, marker="o", facecolors='none', edgecolors='r', lw = 0.5)
     theoretical_pdf = expon.pdf(np.arange(np.amax(times)), loc=0, scale=1/rate)
     ax1.plot(np.arange(np.amax(times)), theoretical_pdf, color='#004953', linewidth=0.7)
